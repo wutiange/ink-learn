@@ -17,13 +17,18 @@ import {
 import Image from "next/image"
 import ink from "@/public/ink.png"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import menus from "../menus"
+import { usePathname } from "next/navigation"
+import { findMenusByPathname } from "../utils"
 
 
 export function AppSidebar() {
-  const [activeObj, setActiveObj] = useState<Record<string, boolean>>({})
+  const pathname = usePathname()
+  const path = pathname.split('/')[1] ?? ''
+  const menu = useMemo(() => findMenusByPathname(`/${path}`), [path])
+  const [activeObj, setActiveObj] = useState<Record<string, boolean>>({[menu?.title ?? '']: true})
   return (
     <Sidebar>
       <SidebarHeader>
@@ -68,7 +73,7 @@ export function AppSidebar() {
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton asChild isActive={subItem.url === pathname}>
                             <Link href={subItem.url}>
                               {subItem.icon && <subItem.icon />}
                               <span>{subItem.title}</span>

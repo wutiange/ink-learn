@@ -1,4 +1,4 @@
-import menus, { Menu } from "../menus"
+import menus, { Menu } from "./menus"
 
 export function findMenusByPathname(pathname: string) {
   const find = (items: Menu[]): Menu | undefined => {
