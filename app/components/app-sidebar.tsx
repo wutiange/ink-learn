@@ -1,4 +1,6 @@
-import { Calendar, ChevronRight, Inbox, Search, Settings } from "lucide-react"
+'use client'
+
+import { ChevronRight } from "lucide-react"
 
 import {
   Sidebar,
@@ -14,8 +16,31 @@ import {
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 import ink from "@/public/ink.png"
-import { IconApi, IconAppWindow, IconBook, IconBrandReactNative, IconColorSwatch, IconComponents, IconFileTypeTsx, IconFocus, IconFocus2, IconHospitalCircle, IconKeyboard, IconSeparator, IconSettings, IconSpace, IconSquare, IconStackForward, IconTerminal, IconTerminal2, IconTestPipe, IconTransform, IconTypography } from "@tabler/icons-react"
+import { 
+  IconApi, 
+  IconAppWindow, 
+  IconBook, 
+  IconBrandReactNative, 
+  IconColorSwatch, 
+  IconComponents, 
+  IconFileTypeTsx, 
+  IconFocus, 
+  IconFocus2, 
+  IconHospitalCircle, 
+  IconKeyboard, 
+  IconSeparator,
+  IconSpace, 
+  IconSquare, 
+  IconStackForward, 
+  IconTerminal, 
+  IconTerminal2, 
+  IconTestPipe, 
+  IconTransform, 
+  IconTypography
+} from "@tabler/icons-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { useState } from "react"
+import Link from "next/link"
 
 // Menu items.
 const items = [
@@ -23,7 +48,6 @@ const items = [
     title: "Components",
     url: "/core-components",
     icon: IconFileTypeTsx,
-    isActive: true,
     items: [
       {
         title: "Text",
@@ -64,37 +88,37 @@ const items = [
     items: [
       {
         title: "useInput",
-        url: "/components/useInput",
+        url: "/hooks/useinput",
         icon: IconKeyboard,
       },
       {
         title: "useApp",
-        url: "/components/useApp",
+        url: "/hooks/useapp",
         icon: IconAppWindow,
       },
       {
         title: "useStdin",
-        url: "/components/useStdin",
+        url: "/hooks/usestdin",
         icon: IconTerminal2,
       },
       {
         title: "useStdout",
-        url: "/components/useStdout",
+        url: "/hooks/usestdout",
         icon: IconTerminal,
       },
       {
         title: "useStderr",
-        url: "/components/useStderr",
+        url: "/hooks/usestderr",
         icon: IconTerminal,
       },
       {
         title: "useFocus",
-        url: "/components/useFocus",
+        url: "/hooks/usefocus",
         icon: IconFocus,
       },
       {
         title: "useFocusManager",
-        url: "/components/useFocusManager",
+        url: "/hooks/usefocusmanager",
         icon: IconFocus2,
       },
     ]
@@ -116,7 +140,7 @@ const items = [
   },
   {
     title: "Screen Reader Support",
-    url: "/using-react-devtools",
+    url: "/screen-reader-support",
     icon: IconBook,
   },
   {
@@ -137,6 +161,7 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const [activeObj, setActiveObj] = useState<Record<string, boolean>>({})
   return (
     <Sidebar>
       <SidebarHeader>
@@ -161,31 +186,36 @@ export function AppSidebar() {
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={item.isActive}
+                open={activeObj[item.title] || false}
+                onOpenChange={(open) => setActiveObj({ ...activeObj, [item.title]: open })}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                      {item.items && item.items.length > 0 && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
+                    <SidebarMenuButton asChild tooltip={item.title}>
+                      <Link href={item.url}>
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                        {item.items && item.items.length > 0 && (
+                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        )}
+                      </Link>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
-                  <CollapsibleContent>
+                  {item.items && item.items.length > 0 && <CollapsibleContent>
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <Link href={subItem.url}>
                               {subItem.icon && <subItem.icon />}
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
-                  </CollapsibleContent>
+                  </CollapsibleContent>}
                 </SidebarMenuItem>
               </Collapsible>
             ))}
