@@ -16,149 +16,11 @@ import {
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 import ink from "@/public/ink.png"
-import { 
-  IconApi, 
-  IconAppWindow, 
-  IconBook, 
-  IconBrandReactNative, 
-  IconColorSwatch, 
-  IconComponents, 
-  IconFileTypeTsx, 
-  IconFocus, 
-  IconFocus2, 
-  IconHospitalCircle, 
-  IconKeyboard, 
-  IconSeparator,
-  IconSpace, 
-  IconSquare, 
-  IconStackForward, 
-  IconTerminal, 
-  IconTerminal2, 
-  IconTestPipe, 
-  IconTransform, 
-  IconTypography
-} from "@tabler/icons-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useState } from "react"
 import Link from "next/link"
+import menus from "../menus"
 
-// Menu items.
-const items = [
-  {
-    title: "Components",
-    url: "/core-components",
-    icon: IconFileTypeTsx,
-    items: [
-      {
-        title: "Text",
-        url: "/core-components/text",
-        icon: IconTypography,
-      },
-      {
-        title: "Box",
-        url: "/core-components/box",
-        icon: IconSquare,
-      },
-      {
-        title: "Newline",
-        url: "/core-components/newline",
-        icon: IconSeparator,
-      },
-      {
-        title: "Spacer",
-        url: "/core-components/spacer",
-        icon: IconSpace,
-      },
-      {
-        title: "Static",
-        url: "/core-components/static",
-        icon: IconStackForward,
-      },
-      {
-        title: "Transform",
-        url: "/core-components/transform",
-        icon: IconTransform,
-      },
-    ],
-  },
-  {
-    title: "Hooks",
-    url: "/hooks",
-    icon: IconHospitalCircle,
-    items: [
-      {
-        title: "useInput",
-        url: "/hooks/useinput",
-        icon: IconKeyboard,
-      },
-      {
-        title: "useApp",
-        url: "/hooks/useapp",
-        icon: IconAppWindow,
-      },
-      {
-        title: "useStdin",
-        url: "/hooks/usestdin",
-        icon: IconTerminal2,
-      },
-      {
-        title: "useStdout",
-        url: "/hooks/usestdout",
-        icon: IconTerminal,
-      },
-      {
-        title: "useStderr",
-        url: "/hooks/usestderr",
-        icon: IconTerminal,
-      },
-      {
-        title: "useFocus",
-        url: "/hooks/usefocus",
-        icon: IconFocus,
-      },
-      {
-        title: "useFocusManager",
-        url: "/hooks/usefocusmanager",
-        icon: IconFocus2,
-      },
-    ]
-  },
-  {
-    title: "API",
-    url: "/api",
-    icon: IconApi,
-  },
-  {
-    title: "Testing",
-    url: "/testing",
-    icon: IconTestPipe,
-  },
-  {
-    title: "Using React Devtools",
-    url: "/using-react-devtools",
-    icon: IconBrandReactNative,
-  },
-  {
-    title: "Screen Reader Support",
-    url: "/screen-reader-support",
-    icon: IconBook,
-  },
-  {
-    title: "Useful Components",
-    url: "/useful-components",
-    icon: IconComponents,
-  },
-  {
-    title: "Useful Hooks",
-    url: "/useful-hooks",
-    icon: IconHospitalCircle,
-  },
-  {
-    title: "Examples",
-    url: "/examples",
-    icon: IconColorSwatch,
-  },
-]
 
 export function AppSidebar() {
   const [activeObj, setActiveObj] = useState<Record<string, boolean>>({})
@@ -182,7 +44,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {items.map((item) => (
+            {menus.map((item) => (
               <Collapsible
                 key={item.title}
                 asChild

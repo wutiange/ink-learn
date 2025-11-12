@@ -38,17 +38,14 @@ For example, Tap uses <Static> to display a list of completed tests. Gatsby uses
     },
   ]
   return (
-    <div className="mx-auto flex w-full max-w-2xl min-w-0 flex-1 flex-col gap-8 px-4 py-6 text-neutral-800 md:px-0 lg:py-8 dark:text-neutral-300 md:px-12 md:pr-6">
-      <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight sm:text-3xl xl:text-4xl">Core Components</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-        {coreComponents.map((component) => (
-          <a key={component.title} className="not-prose bg-gray-0 shadow-2xl group block space-y-2 rounded-md p-6 pt-5 transition-shadow duration-300 hover:shadow-xs" href={component.path}>
-            <h3 className="group-hover:text-gray-1000 truncate text-lg font-medium leading-snug">{component.title}</h3>
-            <div className="line-clamp-3 text-sm font-normal text-gray-900">{component.description}</div>
-          </a>
-        ))}
-      </div>
-    </div>
+    <>
+      {coreComponents.map((component) => (
+        <a key={component.title} className="not-prose bg-gray-0 shadow-2xl group block space-y-2 rounded-md p-6 pt-5 transition-shadow duration-300 hover:shadow-xs" href={component.path}>
+          <h3 className="group-hover:text-gray-1000 truncate text-lg font-medium leading-snug">{component.title}</h3>
+          <div className="line-clamp-3 text-sm font-normal text-gray-900">{component.description}</div>
+        </a>
+      ))}
+    </>
   )
 }
 
