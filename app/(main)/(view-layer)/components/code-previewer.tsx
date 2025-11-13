@@ -4,7 +4,6 @@ import { Editor } from "@monaco-editor/react"
 import Terminal from "./terminal"
 import { cn } from "@/lib/utils"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { editor } from "monaco-editor"
 
 function CodePreviewer({ code: defCode, className, itemClassName }: { code: string, className?: string, itemClassName?: string }) {
 
@@ -27,7 +26,7 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
     fetchContent();
   }, [code]);
 
-  const handleEditorChange = useCallback((value: string | undefined, _: editor.IModelContentChangedEvent) => {
+  const handleEditorChange = useCallback((value: string | undefined) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -41,7 +40,17 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
   return (
     <div className={cn("flex flex-row gap-4", className)}>
       <div className={cn("flex-1", itemClassName)}>
-        <Editor defaultLanguage="javascript" defaultValue={code} theme="vs-dark" onChange={handleEditorChange} />
+        <Editor 
+          defaultLanguage="javascript" 
+          defaultValue={code} 
+          theme="vs-dark" 
+          onChange={handleEditorChange}
+          options={{
+            fontFamily: "'Geist Mono', 'Courier New', monospace",
+            fontSize: 14,
+            tabSize: 2
+          }}
+        />
       </div>
       <Terminal className={cn("flex-1 h-full", itemClassName)} content={content} />
     </div>

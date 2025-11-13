@@ -40,6 +40,8 @@ const Terminal = ({ className, content }: TerminalProps) => {
       if (!termRef.current) {
         termRef.current = new XTerm({
           convertEol: true,
+          fontFamily: "'Geist Mono', 'Courier New', monospace",
+          fontSize: 14,
           theme: {
             background: '#1e1e1e',
             foreground: '#ffffff',
