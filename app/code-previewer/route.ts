@@ -1,17 +1,52 @@
 import { NextRequest, NextResponse } from "next/server"
-import { execSync } from "node:child_process"
-import fs from "node:fs"
+import { readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { execFile } from "node:child_process"
+import { promisify } from "node:util"
+
+const execFileAsync = promisify(execFile)
+const inkDemoDir = path.join(process.cwd(), "ink-demo")
+const packageJsonPromise = readFile(path.join(inkDemoDir, "package.json"), "utf8").then(json => JSON.parse(json))
+const esbuildBin =
+  process.platform === "win32"
+    ? path.join(process.cwd(), "ink-demo", "node_modules", ".bin", "esbuild.cmd")
+    : path.join(process.cwd(), "ink-demo", "node_modules", ".bin", "esbuild")
 
 export async function POST(request: NextRequest) {
-  const { code } = await request.json()
+  try {
+    const { code } = await request.json()
 
-  fs.writeFileSync(path.join(process.cwd(), "ink-demo", "source", 'app.js'), code);
+    await writeFile(path.join(inkDemoDir, "source", "app.js"), code, "utf8")
 
-  execSync(`cd ${path.join(process.cwd(), "ink-demo")} && npm install`);
-  execSync(`cd ${path.join(process.cwd(), "ink-demo")} && npm run build`);
+    const packageJson = await packageJsonPromise
+    const externalDeps = new Set([
+      ...(Object.keys(packageJson.dependencies ?? {})),
+      ...(Object.keys(packageJson.peerDependencies ?? {})),
+      "react-devtools-core",
+    ])
 
-  const content = execSync(`cd ${path.join(process.cwd(), "ink-demo")} && node dist/cli.js --color=always`);
+    const esbuildArgs = [
+      "source/cli.js",
+      "--bundle",
+      "--platform=node",
+      "--format=esm",
+      "--target=node18",
+      "--log-level=info",
+      "--loader:.js=jsx",
+      "--outfile=dist/cli.js",
+      ...Array.from(externalDeps, dep => `--external:${dep}`),
+    ]
 
-  return NextResponse.json({ content: content.toString() })
+    await execFileAsync(esbuildBin, esbuildArgs, { cwd: inkDemoDir })
+
+    const { stdout } = await execFileAsync("node", ["dist/cli.js", "--color=always"], {
+      cwd: inkDemoDir,
+    })
+
+    return NextResponse.json({ content: stdout.toString() })
+  } catch (error) {
+    console.error("esbuild: 构建失败", error)
+    const message = error instanceof Error ? error.message : "Unknown error"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }

@@ -34,7 +34,7 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
       if (value) {
         setCode(value);
       }
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
