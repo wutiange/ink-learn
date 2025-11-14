@@ -8,9 +8,10 @@ import { cn } from '@/lib/utils';
 type TerminalProps = {
   className?: string;
   content?: string;
+  onResize?: (size: { cols: number, rows: number }) => void;
 }
 
-const Terminal = ({ className, content }: TerminalProps) => {
+const Terminal = ({ className, content, onResize }: TerminalProps) => {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const termRef = useRef<XTermType | null>(null);
   const fitAddonRef = useRef<FitAddonType | null>(null);
@@ -26,8 +27,9 @@ const Terminal = ({ className, content }: TerminalProps) => {
   const handleResize = useCallback(() => {
     if (fitAddonRef.current) {
       fitAddonRef.current.fit();
+      onResize?.({ cols: termRef.current?.cols ?? 0, rows: termRef.current?.rows ?? 0 });
     }
-  }, [])
+  }, [onResize])
 
   const initTerminal = useCallback((ref: HTMLDivElement | null) => {
     const init = async () => {
@@ -56,10 +58,11 @@ const Terminal = ({ className, content }: TerminalProps) => {
 
       termRef.current.open(terminalRef.current);
       fitAddonRef.current.fit();
+      onResize?.({ cols: termRef.current?.cols ?? 0, rows: termRef.current?.rows ?? 0 });
       setTerm(termRef.current)
     }
     init();
-  }, [])
+  }, [onResize])
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);

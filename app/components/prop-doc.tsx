@@ -3,7 +3,7 @@ import CodePreviewer from "../(main)/(view-layer)/components/code-previewer"
 
 export type PropDocProps = {
   name: string
-  type?: string
+  type?: string[]
   defaultVal?: string
   description?: {
     text: string | React.ReactNode
@@ -19,13 +19,18 @@ function PropDoc({ name, type, defaultVal, description, example, className, allo
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <h3 className="text-lg font-bold">{name}</h3>
-      {type && <p>Type: <code>{type}</code></p>}
-      {allowedValues && <p className="flex flex-row gap-2">
+      {type && <div className="flex flex-row gap-2">
+        Type: 
+        <p className="flex flex-row gap-2">
+          {type.map((value) => <code key={value}>{value}</code>)}
+        </p>
+      </div>}
+      {allowedValues && <div className="flex flex-row gap-2">
         Allowed values: 
-        <div className="flex flex-row gap-2">
+        <p className="flex flex-row gap-2">
           {allowedValues.map((value) => <code key={value}>{value}</code>)}
-        </div>
-      </p>}
+        </p>
+      </div>}
       {defaultVal && <p>Default: <code>{defaultVal}</code></p>}
       {description && <p>{description.text}</p>}
       {description?.list && <ul>

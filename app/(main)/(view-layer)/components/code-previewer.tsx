@@ -9,22 +9,25 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
 
   const [code, setCode] = useState(defCode);
   const [content, setContent] = useState<string | undefined>(undefined);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null); 
+  const [termSize, setTermSize] = useState<{ cols: number, rows: number } | null>(null);
+
 
   useEffect(() => {
+    if (!termSize) return;
     const fetchContent = async () => {
       const res = await fetch("/code-previewer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, cols: termSize.cols, rows: termSize.rows }),
       });
       const data = await res.json();
       setContent(data.content);
     };
     fetchContent();
-  }, [code]);
+  }, [code, termSize]);
 
   const handleEditorChange = useCallback((value: string | undefined) => {
     if (timerRef.current) {
@@ -52,7 +55,7 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
           }}
         />
       </div>
-      <Terminal className={cn("flex-1 h-full", itemClassName)} content={content} />
+      <Terminal className={cn("flex-1 h-full p-2", itemClassName)} content={content} onResize={setTermSize} />
     </div>
   )
 }

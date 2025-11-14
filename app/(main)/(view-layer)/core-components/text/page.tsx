@@ -7,7 +7,7 @@ function TextPage() {
   const propDocs: PropDocProps[] = [
     {
       name: "color",
-      type: "string",
+      type: ["string"],
       description: {
         text: <>Change text color. Ink uses <Link href="https://github.com/chalk/chalk" target="_blank" className="text-blue-500">chalk</Link> under the hood, so all its functionality is supported.</>,
       },
@@ -15,7 +15,7 @@ function TextPage() {
     },
     {
       name: "backgroundColor",
-      type: "string",
+      type: ["string"],
       description: {
         text: <>Same as <code>color</code> above, but for background.</>,
       },
@@ -23,7 +23,7 @@ function TextPage() {
     },  
     {
       name: "dimColor",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Dim the color (make it less bright).",
@@ -32,7 +32,7 @@ function TextPage() {
     },
     {
       name: "bold",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Make the text bold.",
@@ -40,7 +40,7 @@ function TextPage() {
     },
     {
       name: "italic",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Make the text italic.",
@@ -48,7 +48,7 @@ function TextPage() {
     },
     {
       name: "underline",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Make the text underlined.",
@@ -56,7 +56,7 @@ function TextPage() {
     },
     {
       name: "strikethrough",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Make the text crossed with a line.",
@@ -64,7 +64,7 @@ function TextPage() {
     },
     {
       name: "inverse",
-      type: "boolean",
+      type: ["boolean"],
       defaultVal: "false",
       description: {
         text: "Invert background and foreground colors.",
@@ -73,7 +73,7 @@ function TextPage() {
     },
     {
       name: "wrap",
-      type: "string",
+      type: ["string"],
       allowedValues: ["wrap", "truncate", "truncate-start", "truncate-middle", "truncate-end"],
       defaultVal: "wrap",
       description: {

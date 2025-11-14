@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
-import { mkdir, readFile, unlink, writeFile } from "node:fs/promises"
+import { readFile, unlink, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { execFile, execSync } from "node:child_process"
+import { execFile } from "node:child_process"
 import { promisify } from "node:util"
+import { spawn } from 'node-pty'
 
 const execFileAsync = promisify(execFile)
 const inkDemoDir = path.join(process.cwd(), "ink-demo")
@@ -15,10 +16,10 @@ let fileSerialNumber = 0
 
 export async function POST(request: NextRequest) {
   try {
-    let { code } = (await request.json()) as { code: string }
+    const { code, cols, rows } = (await request.json()) as { code: string, cols: number, rows: number  }
     const fileName = `example-${fileSerialNumber++}-${Date.now().toString(36)}.js`
-    code = `import React from 'react';\n${code}`;
-    await writeFile(path.join(inkDemoDir, fileName), code, "utf8")
+    const newCode = `import React from 'react';\n${code}`;
+    await writeFile(path.join(inkDemoDir, fileName), newCode, "utf8")
 
     const packageJson = await packageJsonPromise
     const externalDeps = new Set([
@@ -41,15 +42,28 @@ export async function POST(request: NextRequest) {
 
 
     await execFileAsync(esbuildBin, esbuildArgs, { cwd: inkDemoDir })
-
-    const { stdout } = await execFileAsync("node", [`compiled-${fileName}`, "--color=always"], {
+    const pty = spawn("node", [`compiled-${fileName}`, "--color=always"], {
       cwd: inkDemoDir,
+      env: {
+        ...process.env
+      },
+      cols,
+      rows,
     })
+    const stdout = await new Promise<string>((resolve) => {
+      let chunk = '';
+      pty.onData((data) => {
+        chunk += data.toString();
+      });
+      pty.onExit(() => {
+        resolve(chunk);
+      });
+    });
     // 删除文件
     unlink(path.join(inkDemoDir, fileName))
     unlink(path.join(inkDemoDir, `compiled-${fileName}`))
 
-    return NextResponse.json({ content: stdout.toString() })
+    return NextResponse.json({ content: stdout })
   } catch (error) {
     console.error("esbuild: 构建失败", error)
     const message = error instanceof Error ? error.message : "Unknown error"
