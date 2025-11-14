@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { readFile, writeFile } from "node:fs/promises"
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { execFile } from "node:child_process"
+import { execFile, execSync } from "node:child_process"
 import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
@@ -11,12 +11,14 @@ const esbuildBin =
   process.platform === "win32"
     ? path.join(process.cwd(), "ink-demo", "node_modules", ".bin", "esbuild.cmd")
     : path.join(process.cwd(), "ink-demo", "node_modules", ".bin", "esbuild")
+let fileSerialNumber = 0
 
 export async function POST(request: NextRequest) {
   try {
-    const { code } = await request.json()
-
-    await writeFile(path.join(inkDemoDir, "source", "app.js"), code, "utf8")
+    let { code } = (await request.json()) as { code: string }
+    const fileName = `example-${fileSerialNumber++}-${Date.now().toString(36)}.js`
+    code = `import React from 'react';\n${code}`;
+    await writeFile(path.join(inkDemoDir, fileName), code, "utf8")
 
     const packageJson = await packageJsonPromise
     const externalDeps = new Set([
@@ -26,22 +28,26 @@ export async function POST(request: NextRequest) {
     ])
 
     const esbuildArgs = [
-      "source/cli.js",
+      fileName,
       "--bundle",
       "--platform=node",
       "--format=esm",
       "--target=node18",
       "--log-level=info",
       "--loader:.js=jsx",
-      "--outfile=dist/cli.js",
+      `--outfile=compiled-${fileName}`,
       ...Array.from(externalDeps, dep => `--external:${dep}`),
     ]
 
+
     await execFileAsync(esbuildBin, esbuildArgs, { cwd: inkDemoDir })
 
-    const { stdout } = await execFileAsync("node", ["dist/cli.js", "--color=always"], {
+    const { stdout } = await execFileAsync("node", [`compiled-${fileName}`, "--color=always"], {
       cwd: inkDemoDir,
     })
+    // 删除文件
+    unlink(path.join(inkDemoDir, fileName))
+    unlink(path.join(inkDemoDir, `compiled-${fileName}`))
 
     return NextResponse.json({ content: stdout.toString() })
   } catch (error) {

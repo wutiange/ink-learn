@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Terminal as XTermType } from '@xterm/xterm';
 import type { FitAddon as FitAddonType } from '@xterm/addon-fit';
+import { cn } from '@/lib/utils';
 
 type TerminalProps = {
   className?: string;
@@ -67,7 +68,7 @@ const Terminal = ({ className, content }: TerminalProps) => {
     }
   }, [handleResize])
 
-  return <div ref={initTerminal} className={className} />;
+  return <div ref={initTerminal} className={cn("bg-[#1e1e1e]", className)} />;
 };
 
 export default Terminal;

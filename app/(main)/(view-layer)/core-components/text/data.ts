@@ -1,8 +1,7 @@
 
 
 export const textStyleExample = `
-import React from 'react';
-import {Text} from 'ink';
+import {Text, render} from 'ink';
 
 const Example = () => (
 	<>
@@ -18,6 +17,82 @@ const Example = () => (
 		<Text inverse>I am inversed</Text>
 	</>
 );
+render(<Example />);
+`.trim()
 
-export default Example;
+export const textColorExample = `
+import {Text, render} from 'ink';
+
+const Example = () => (
+	<>
+		<Text color="green">Green</Text>
+		<Text color="#005cc5">Blue</Text>
+		<Text color="rgb(232, 131, 136)">Red</Text>
+	</>
+);
+render(<Example />);
+`.trim()
+
+export const textBackgroundColorExample = `
+import {Text, render} from 'ink';
+
+const Example = () => (
+	<>
+		<Text backgroundColor="green" color="white">Green</Text>
+		<Text backgroundColor="#005cc5" color="white">Blue</Text>
+		<Text backgroundColor="rgb(232, 131, 136)" color="white">Red</Text>
+	</>
+);
+render(<Example />);
+`.trim()
+
+export const textDimColorExample = `
+import {Text, render} from 'ink';
+
+const Example = () => (
+	<>
+		<Text color="red" dimColor>
+			Dimmed Red
+		</Text>
+	</>
+);
+render(<Example />);
+`.trim()
+
+export const textInverseExample = `
+import {Text, render} from 'ink';
+
+const Example = () => (
+	<>
+		<Text inverse color="yellow">
+			Inversed Yellow
+		</Text>
+	</>
+);
+render(<Example />);
+`.trim()
+
+export const textWrapExample = `
+import {Text, render, Box} from 'ink';
+
+const Example = () => (
+	<>
+		<Box width={7} borderColor="blue" borderStyle="classic">
+			<Text>Hello World</Text>
+		</Box>
+
+		<Box width={7} borderColor="blue" borderStyle="classic">
+			<Text wrap="truncate">Hello World</Text>
+		</Box>
+
+		<Box width={7} borderColor="blue" borderStyle="classic">
+			<Text wrap="truncate-middle">Hello World</Text>
+		</Box>
+
+		<Box width={7} borderColor="blue" borderStyle="classic">
+			<Text wrap="truncate-start">Hello World</Text>
+		</Box>
+	</>
+);
+render(<Example />);
 `.trim()
