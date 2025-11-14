@@ -12,10 +12,11 @@ export type PropDocProps = {
   example?: string
   className?: string
   allowedValues?: string[]
+  extra?: React.ReactNode
 }
 
 
-function PropDoc({ name, type, defaultVal, description, example, className, allowedValues }: PropDocProps) {
+function PropDoc({ name, type, defaultVal, description, example, className, allowedValues, extra }: PropDocProps) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <h3 className="text-lg font-bold">{name}</h3>
@@ -39,6 +40,7 @@ function PropDoc({ name, type, defaultVal, description, example, className, allo
         ))}
       </ul>}
       {example && <CodePreviewer className="flex-wrap" itemClassName={`min-w-100 h-${example.split("\n").length * 5.5}`} code={example} />}
+      {extra && extra}
     </div>
   )
 }
