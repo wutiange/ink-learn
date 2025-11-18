@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 type TerminalProps = {
   className?: string;
-  content?: string;
+  content: string | null;
   onResize?: (size: { cols: number, rows: number }) => void;
 }
 

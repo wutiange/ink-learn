@@ -5,6 +5,4 @@ package-lock.json
 
 source/
 
-example-*.js
-
-compiled-example-*.js
+.temp-*
