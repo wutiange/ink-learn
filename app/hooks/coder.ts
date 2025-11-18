@@ -87,6 +87,7 @@ const useCoder = (fileName: string, defCode: string) => {
     timerRef.current = setTimeout(() => {
       if (value) {
         send(value);
+        setCode(value);
       }
     }, 500);
   }, [send])

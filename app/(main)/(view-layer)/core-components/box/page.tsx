@@ -4,7 +4,7 @@ import { Editor } from "@monaco-editor/react"
 import Terminal from "@/app/components/terminal"
 import { useCallback, useEffect } from "react"
 import useEventSource from "@/app/hooks/coder";
-import { boxExample } from "./data";
+import { boxExample, boxWidthExample } from "./data";
 
 export default function BoxPage() {
   const fileName = "box.js";
@@ -57,7 +57,7 @@ export default function BoxPage() {
               <p className="text-gray-700 mb-3">
                 设置元素的宽度（以空格为单位）。也可以设置为百分比，会基于父元素的宽度计算。
               </p>
-              <button className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center space-x-1">
+              <button onClick={() => setCode(boxWidthExample)} className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center space-x-1">
                 <span>查看示例</span>
                 <i className="fas fa-chevron-right"></i>
               </button>
