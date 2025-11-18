@@ -1,6 +1,7 @@
 'use client'
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import type { Terminal as XTermType } from '@xterm/xterm';
 
 const clientId = uuidv4();
 let es: EventSource | null = null;
@@ -10,7 +11,8 @@ const initEventSource = () => {
     es = new EventSource(`/code-previewer?clientId=${clientId}`)
   }
   es.onmessage = (event: MessageEvent) => {
-    const { fileName, data } = JSON.parse(event.data) as { fileName: string, data: string }
+    const { fileName, data } = JSON.parse(event.data) as { fileName: string, data: string };
+    console.log(fileName, data, '------message-----', allListeners[fileName])
     if (allListeners[fileName]) {
       allListeners[fileName].forEach(callback => callback(data))
     }
@@ -35,9 +37,13 @@ const addListener = (eventName: string, callback: (data: string) => void) => {
 
 
 
-const useEventSource = (fileName: string) => {
+const useCoder = (fileName: string, defCode: string) => {
+  const [code, setCode] = useState<string>(defCode);
   const [content, setContent] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [term, setTerm] = useState<XTermType | null>(null)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+
 
   useEffect(() => {
     initEventSource()
@@ -55,12 +61,15 @@ const useEventSource = (fileName: string) => {
   useEffect(() => {
     if (!fileName) return
     return addListener(fileName, (data: string) => {
-      setContent(data)
+      console.log('------data-----', data)
+      term?.write(data)
     })
-  }, [fileName])
+  }, [fileName, term])
 
-  const send = useCallback(async (code: string, cols: number, rows: number) => {
+  const send = useCallback(async (code: string) => {
     setIsRunning(true)
+    term?.clear();
+    const {cols = 80, rows = 40} = term ?? {};
     await fetch('/code-previewer', {
       method: 'POST',
       headers: {
@@ -69,8 +78,20 @@ const useEventSource = (fileName: string) => {
       body: JSON.stringify({ code, cols, rows, clientId, fileName }),
     }).then(res => res.json())
     setIsRunning(false)
-  }, [fileName])
-  return { send, content, isRunning }
+  }, [fileName, term])
+
+  const handleEditorChange = useCallback((value: string | undefined) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      if (value) {
+        send(value);
+      }
+    }, 500);
+  }, [send])
+
+  return { send, content, isRunning, setContent, setTerm, setCode: handleEditorChange, code }
 }
 
-export default useEventSource;
+export default useCoder;

@@ -1,336 +1,218 @@
-import PropDoc, { PropDocProps } from "@/app/components/prop-doc"
-import CodePreviewer from "../../components/code-previewer"
-import {
-  boxExample,
-  boxheightExample,
-  boxPaddingExample,
-  boxWidthExample,
-  boxMarginExample,
-  boxGapExample,
-  boxRowGapExample,
-  boxColumnGapExample,
-  boxFlexGrowExample,
-  boxFlexShrinkExample,
-  boxFlexBasisExample,
-  boxFlexDirectionExample,
-  boxFlexWrapExample,
-  boxAlignItemsExample,
-  boxAlignSelfExample,
-  boxJustifyContentExample,
-  boxBorderStyleExample,
-} from "./data"
-import Link from "next/link"
+'use client'
 
-function BoxPage() {
-  const propDocs: PropDocProps[] = [
-    {
-      name: 'width',
-      type: ['number', 'string'],
-      description: {
-        text: 'Width of the element in spaces. You can also set it as a percentage, which will calculate the width based on the width of the parent element.'
-      },
-      example: boxWidthExample,
-    },
-    {
-      name: 'height',
-      type: ['number', 'string'],
-      description: {
-        text: 'Height of the element in lines (rows). You can also set it as a percentage, which will calculate the height based on the height of the parent element.'
-      },
-      example: boxheightExample,
-    },
-    {
-      name: 'minWidth',
-      type: ['number'],
-      description: {
-        text: <>Sets a minimum width of the element. Percentages aren&apos;t supported yet; see <Link href="https://github.com/facebook/yoga/issues/872" target="_blank" className="text-blue-500">facebook/yoga#872</Link>.</>
-      }
-    },
-    {
-      name: 'minHeight',
-      type: ['number'],
-      description: {
-        text: <>Sets a minimum height of the element. Percentages aren&apos;t supported yet; see <Link href="https://github.com/facebook/yoga/issues/872" target="_blank" className="text-blue-500">facebook/yoga#872</Link>.</>
-      }
-    },
-    {
-      name: 'paddingTop',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Top padding.'
-      }
-    },
-    {
-      name: 'paddingBottom',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Bottom padding.'
-      }
-    },
-    {
-      name: 'paddingLeft',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Left padding.'
-      }
-    },
-    {
-      name: 'paddingRight',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Right padding.'
-      }
-    },
-    {
-      name: 'paddingX',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Horizontal padding. Equivalent to setting <code>paddingLeft</code> and <code>paddingRight</code>.</>
-      }
-    },
-    {
-      name: 'paddingY',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Vertical padding. Equivalent to setting <code>paddingTop</code> and <code>paddingBottom</code>.</>
-      }
-    },
-    {
-      name: 'padding',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Padding on all sides. Equivalent to setting <code>paddingTop</code>, <code>paddingBottom</code>, <code>paddingLeft</code> and <code>paddingRight</code>.</>
-      },
-      example: boxPaddingExample,
-    },
-    {
-      name: 'marginTop',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Top margin.'
-      },
-    },
-    {
-      name: 'marginBottom',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Bottom margin.'
-      },
-    },
-    {
-      name: 'marginLeft',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Left margin.'
-      }
-    },
-    {
-      name: 'marginRight',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Right margin.'
-      },
-    },
-    {
-      name: 'marginX',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Horizontal margin. Equivalent to setting <code>marginLeft</code> and <code>marginRight</code>.</>
-      },
-    },
-    {
-      name: 'marginY',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Vertical margin. Equivalent to setting <code>marginTop</code> and <code>marginBottom</code>.</>
-      }
-    },
-    {
-      name: 'margin',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Margin on all sides. Equivalent to setting <code>marginTop</code>, <code>marginBottom</code>, <code>marginLeft</code> and <code>marginRight</code>.</>
-      },
-      example: boxMarginExample
-    },
-    {
-      name: 'gap',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>Size of the gap between an element&apos;s columns and rows. A shorthand for <code>columnGap</code> and <code>rowGap</code>.</>
-      },
-      example: boxGapExample,
-    },
-    {
-      name: 'columnGap',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Size of the gap between an element&apos;s columns.'
-      },
-      example: boxColumnGapExample
-    },
-    {
-      name: 'rowGap',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: 'Size of the gap between an element&apos;s rows.'
-      },
-      example: boxRowGapExample
-    },
-    {
-      name: 'flexGrow',
-      type: ['number'],
-      defaultVal: '0',
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow" target="_blank" className="text-blue-500">flex-grow</Link>.</>
-      },
-      example: boxFlexGrowExample,
-    },
-    {
-      name: 'flexShrink',
-      type: ['number'],
-      defaultVal: '1',
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink" target="_blank" className="text-blue-500">flex-shrink</Link>.</>
-      },
-      example: boxFlexShrinkExample,
-    },
-    {
-      name: 'flexBasis',
-      type: ['number', 'string'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis" target="_blank" className="text-blue-500">flex-basis</Link>.</>
-      },
-      example: boxFlexBasisExample,
-    },
-    {
-      name: 'flexDirection',
-      type: ['string'],
-      allowedValues: ['row', 'row-reverse', 'column', 'column-reverse'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction" target="_blank" className="text-blue-500">flex-direction</Link>.</>
-      },
-      example: boxFlexDirectionExample,
-    },
-    {
-      name: 'flexWrap',
-      type: ['string'],
-      allowedValues: ['nowrap', 'wrap', 'wrap-reverse'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap" target="_blank" className="text-blue-500">flex-wrap</Link>.</>
-      },
-      example: boxFlexWrapExample,
-    },
-    {
-      name: 'alignItems',
-      type: ['string'],
-      allowedValues: ['flex-start', 'center', 'flex-end'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/align-items" target="_blank" className="text-blue-500">align-items</Link>.</>
-      },
-      example: boxAlignItemsExample,
-    },
-    {
-      name: 'alignSelf',
-      type: ['string'],
-      defaultVal: 'auto',
-      allowedValues: ['auto', 'flex-start', 'center', 'flex-end'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/align-self" target="_blank" className="text-blue-500">align-self</Link>.</>
-      },
-      example: boxAlignSelfExample,
-    },
-    {
-      name: 'justifyContent',
-      type: ['string'],
-      allowedValues: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'],
-      description: {
-        text: <>See <Link href="https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content" target="_blank" className="text-blue-500">justify-content</Link>.</>
-      },
-      example: boxJustifyContentExample,
-    },
-    {
-      name: 'display',
-      type: ['string'],
-      defaultVal: 'flex',
-      allowedValues: ['flex', 'none'],
-      description: {
-        text: 'Set this property to none to hide the element.'
-      },
-    },
-    {
-      name: 'overflowX',
-      type: ['string'],
-      defaultVal: 'visible',
-      allowedValues: ['visible', 'hidden'],
-      description: {
-        text: "Behavior for an element's overflow in the horizontal direction."
-      },
-    },
-    {
-      name: 'overflowY',
-      type: ['string'],
-      defaultVal: 'visible',
-      allowedValues: ['visible', 'hidden'],
-      description: {
-        text: "Behavior for an element's overflow in the vertical direction."
-      },
-    },
-    {
-      name: 'overflow',
-      type: ['string'],
-      defaultVal: 'visible',
-      allowedValues: ['visible', 'hidden'],
-      description: {
-        text: 'A shortcut for setting overflowX and overflowY at the same time.'
-      },
-    },
-    {
-      name: 'borderStyle',
-      type: ['string', 'BoxStyle'],
-      allowedValues: ['single', 'double', 'round', 'bold', 'singleDouble', 'doubleSingle', 'classic'],
-      description: {
-        text: <>Add a border with a specified style. If borderStyle is undefined (the default), no border will be added. Ink uses border styles from the <Link href="https://github.com/sindresorhus/cli-boxes" target="_blank" className="text-blue-500">cli-boxes</Link> module. See example in <code>examples/borders</code>.</>
-      },
-      example: boxBorderStyleExample,
-      extra: <p>See example in <Link href="https://github.com/vadimdemedes/ink/blob/master/examples/borders/borders.tsx" target="_blank" className="text-blue-500">examples/borders</Link>.</p>
+import { Editor } from "@monaco-editor/react"
+import Terminal from "@/app/components/terminal"
+import { useCallback, useEffect } from "react"
+import useEventSource from "@/app/hooks/coder";
+import { boxExample } from "./data";
+
+export default function BoxPage() {
+  const fileName = "box.js";
+  const { isRunning, setContent, setTerm, setCode, code, send } = useEventSource(fileName, boxExample)
+
+  useEffect(() => {
+    if (!boxExample) return;
+    send(boxExample);
+  }, [send])
+
+  const handleEditorChange = useCallback((value: string | undefined) => {
+    if (value) {
+      setCode(value);
     }
-  ]
+  }, [setCode]);
+
   return (
-    <div className="w-full md:col-span-2 lg:col-span-3 gap-4 flex flex-col">
-      <p><code>&lt;Box&gt;</code> is an essential Ink component to build your layout. It&apos;s like <code>&lt;div style=&quot;display: flex&quot;&gt;</code> in the browser.</p>
-      <CodePreviewer className="flex-wrap" itemClassName="min-w-100 h-50" code={boxExample} />
-      {propDocs.map((propDoc) => (
-        <PropDoc 
-          key={propDoc.name} 
-          name={propDoc.name} 
-          type={propDoc.type} 
-          defaultVal={propDoc.defaultVal} 
-          description={propDoc.description} 
-          example={propDoc.example} 
-          allowedValues={propDoc.allowedValues}
-          extra={propDoc.extra}
-        />
-      ))}
+    <div className="flex flex-row gap-4 flex-1">
+      <div className="overflow-y-auto flex-1">
+        {/* 标题 */}
+        <div className="mb-8">
+          <p className="text-xl text-gray-600">
+            <code className="px-2 py-1 bg-purple-50 text-purple-700 rounded">&lt;Box&gt;</code> 
+            {' '}是构建布局的基础组件，类似于浏览器中的{' '}
+            <code className="px-2 py-1 bg-gray-100 text-gray-700 rounded">&lt;div style=&quot;display: flex&quot;&gt;</code>
+          </p>
+        </div>
+
+        {/* Props 文档 */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Props</h2>
+          
+          {/* width */}
+          <div className="border border-gray-200 rounded-lg mb-4 overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <code className="text-lg font-semibold text-purple-700">width</code>
+                  <div className="flex space-x-2">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">number</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">string</span>
+                  </div>
+                </div>
+                <button className="text-sm text-gray-500 hover:text-gray-700">
+                  <i className="fas fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-700 mb-3">
+                设置元素的宽度（以空格为单位）。也可以设置为百分比，会基于父元素的宽度计算。
+              </p>
+              <button className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center space-x-1">
+                <span>查看示例</span>
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* height */}
+          <div className="border border-gray-200 rounded-lg mb-4 overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <code className="text-lg font-semibold text-purple-700">height</code>
+                  <div className="flex space-x-2">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">number</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">string</span>
+                  </div>
+                </div>
+                <button className="text-sm text-gray-500 hover:text-gray-700">
+                  <i className="fas fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-700 mb-3">
+                设置元素的高度（以行为单位）。也可以设置为百分比，会基于父元素的高度计算。
+              </p>
+              <button className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center space-x-1">
+                <span>查看示例</span>
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* padding */}
+          <div className="border border-gray-200 rounded-lg mb-4 overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <code className="text-lg font-semibold text-purple-700">padding</code>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">number</span>
+                </div>
+                <button className="text-sm text-gray-500 hover:text-gray-700">
+                  <i className="fas fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-700 mb-3">
+                设置元素的内边距。
+              </p>
+              <button className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center space-x-1">
+                <span>查看示例</span>
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          {/* 更多 Props 提示 */}
+          <div className="text-center py-4">
+            <button className="text-purple-600 hover:text-purple-700 font-medium">
+              显示更多属性 <i className="fas fa-chevron-down ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+        {/* 相关链接 */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">相关资源</h2>
+          <div className="space-y-2">
+            <a href="#" className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition">
+              <div className="flex items-center space-x-3">
+                <i className="fas fa-external-link-alt text-gray-400"></i>
+                <span className="font-medium text-gray-900">Yoga Layout 文档</span>
+              </div>
+              <i className="fas fa-arrow-right text-gray-400"></i>
+            </a>
+            <a href="#" className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition">
+              <div className="flex items-center space-x-3">
+                <i className="fab fa-github text-gray-400"></i>
+                <span className="font-medium text-gray-900">GitHub 源码</span>
+              </div>
+              <i className="fas fa-arrow-right text-gray-400"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* 右栏：代码编辑器 + 实时预览 */}
+      <div className="flex flex-col flex-1 gap-2">
+        <div className="flex-1 rounded-lg overflow-hidden">
+          <div className="flex items-center space-x-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+            <div className="flex space-x-2">
+              {/* 红色到紫色 */}
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-red-500 via-pink-500 to-purple-500"></div>
+              {/* 青色到绿色 */}
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-cyan-400 to-green-500"></div>
+              {/* 黄色到橙色 */}
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500"></div>
+            </div>
+            <span className="text-sm text-gray-400 ml-4">{fileName}</span>
+          </div>
+          <Editor 
+            defaultLanguage="javascript" 
+            value={code ?? ''} 
+            defaultValue={boxExample}
+            theme="vs-dark" 
+            onChange={handleEditorChange}
+            options={{
+              fontFamily: "'Geist Mono', 'Courier New', monospace",
+              fontSize: 14,
+              tabSize: 2,
+              minimap: { enabled: false },
+            }}
+          />
+        </div>
+
+        {/* 实时预览 */}
+        <div className="flex-1 bg-black flex flex-col rounded-lg overflow-hidden">
+          <div className="flex items-center justify-between bg-gray-800 border-b border-gray-700">
+            <div className="flex items-center space-x-2 px-4 py-3 bg-gray-800">
+              <div className="flex space-x-2">
+                {/* 红色到紫色 */}
+                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-red-500 via-pink-500 to-purple-500"></div>
+                {/* 青色到绿色 */}
+                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-cyan-400 to-green-500"></div>
+                {/* 黄色到橙色 */}
+                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500"></div>
+              </div>
+              <span className="text-sm text-gray-400 ml-4">{fileName}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              {isRunning && (
+                <span className="px-2 py-1 bg-green-500 text-white text-xs rounded flex items-center space-x-1">
+                  <i className="fas fa-circle text-xs animate-pulse"></i>
+                  <span>运行中</span>
+                </span>
+              )}
+              <button 
+                className="text-gray-400 hover:text-white text-sm" 
+                title="清空"
+                onClick={() => setContent(null)}
+              >
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <Terminal 
+              className="h-full w-full" 
+              onTermRef={setTerm} 
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default BoxPage

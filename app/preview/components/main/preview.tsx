@@ -1,38 +1,29 @@
 'use client'
 
 import { Editor } from "@monaco-editor/react"
-import Terminal from "@/app/(main)/(view-layer)/components/terminal"
-import { useCallback, useEffect, useRef, useState } from "react"
+import Terminal from "@/app/components/terminal"
+import { useCallback, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { IconArrowLeft, IconPlayerPlay } from "@tabler/icons-react"
-import useEventSource from "../../../hooks/useEventSource"
+import useEventSource from "../../../hooks/coder"
 
 function Preview() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const initialCode = searchParams.get('code') ? decodeURIComponent(searchParams.get('code')!) : ''
   const filename = searchParams.get('filename') || 'example.js'
-  const [code, setCode] = useState(initialCode)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
-  const [termSize, setTermSize] = useState<{ cols: number, rows: number } | null>(null)
-  const { send, content, isRunning } = useEventSource(filename)
+  const { isRunning, setTerm, setCode, send } = useEventSource(filename, initialCode)
 
   useEffect(() => {
-    if (!termSize || !code) return;
-    send(code, termSize.cols, termSize.rows);
-  }, [code, termSize, send])
-
+    if (!initialCode) return;
+    send(initialCode);
+  }, [initialCode, send])
 
   const handleEditorChange = useCallback((value: string | undefined) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current)
+    if (value) {
+      setCode(value)
     }
-    timerRef.current = setTimeout(() => {
-      if (value) {
-        setCode(value)
-      }
-    }, 500)
-  }, [])
+  }, [setCode])
 
   return (
     <div className="flex flex-col bg-gray-950 flex-1">
@@ -99,8 +90,7 @@ function Preview() {
           <div className="flex-1 relative">
             <Terminal 
               className="absolute inset-0 p-4" 
-              content={content} 
-              onResize={setTermSize} 
+              onTermRef={setTerm} 
             />
           </div>
         </div>

@@ -1,14 +1,14 @@
 'use client'
 
 import { Editor } from "@monaco-editor/react"
-import Terminal from "./terminal"
+import Terminal from "../../../components/terminal"
 import { cn } from "@/lib/utils"
 import { useCallback, useEffect, useRef, useState } from "react"
 
 function CodePreviewer({ code: defCode, className, itemClassName }: { code: string, className?: string, itemClassName?: string }) {
 
   const [code, setCode] = useState(defCode);
-  const [content, setContent] = useState<string | undefined>(undefined);
+  const [content, setContent] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null); 
   const [termSize, setTermSize] = useState<{ cols: number, rows: number } | null>(null);
 
@@ -55,7 +55,7 @@ function CodePreviewer({ code: defCode, className, itemClassName }: { code: stri
           }}
         />
       </div>
-      <Terminal className={cn("flex-1 h-full p-2", itemClassName)} content={content} onResize={setTermSize} />
+      <Terminal className={cn("flex-1 h-full p-2", itemClassName)} content={content} />
     </div>
   )
 }

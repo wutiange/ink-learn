@@ -7,29 +7,19 @@ import { cn } from '@/lib/utils';
 
 type TerminalProps = {
   className?: string;
-  content: string | null;
-  onResize?: (size: { cols: number, rows: number }) => void;
+  onTermRef?: (term: XTermType | null) => void;
 }
 
-const Terminal = ({ className, content, onResize }: TerminalProps) => {
+const Terminal = ({ className, onTermRef }: TerminalProps) => {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const termRef = useRef<XTermType | null>(null);
   const fitAddonRef = useRef<FitAddonType | null>(null);
-  const [term, setTerm] = useState<XTermType | null>(null);
-
-  useEffect(() => {
-    if (term && content) {
-      term.clear();
-      term.write(content);
-    }
-  }, [content, term]);
 
   const handleResize = useCallback(() => {
     if (fitAddonRef.current) {
       fitAddonRef.current.fit();
-      onResize?.({ cols: termRef.current?.cols ?? 0, rows: termRef.current?.rows ?? 0 });
     }
-  }, [onResize])
+  }, [])
 
   const initTerminal = useCallback((ref: HTMLDivElement | null) => {
     const init = async () => {
@@ -58,11 +48,10 @@ const Terminal = ({ className, content, onResize }: TerminalProps) => {
 
       termRef.current.open(terminalRef.current);
       fitAddonRef.current.fit();
-      onResize?.({ cols: termRef.current?.cols ?? 0, rows: termRef.current?.rows ?? 0 });
-      setTerm(termRef.current)
+      onTermRef?.(termRef.current);
     }
     init();
-  }, [onResize])
+  }, [onTermRef])
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);

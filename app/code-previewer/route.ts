@@ -128,5 +128,6 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const { clientId } = (await request.json()) as { clientId: string  }
   await delFile(path.join(inkDemoDir, `.temp-${clientId}`))
+  killPty(clientId)
   return NextResponse.json({ content: 'ok' })
 }
