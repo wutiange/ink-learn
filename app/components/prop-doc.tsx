@@ -73,7 +73,7 @@ export default function PropDoc({ propTitle, fileName, code: defCode, propsData,
         </div>
 
         {/* Props 文档 - 按分类显示 */}
-        <div className="overflow-y-auto pr-4">
+        {propsData.length > 0 && <div className="overflow-y-auto pr-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Props</h2>
           
           {Object.entries(groupedProps).map(([category, props]) => (
@@ -153,7 +153,7 @@ export default function PropDoc({ propTitle, fileName, code: defCode, propsData,
               </Accordion>
             </div>
           ))}
-        </div>
+        </div>}
       </div>
 
       {/* 右栏：代码编辑器 + 实时预览 */}
