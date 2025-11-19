@@ -5,7 +5,12 @@ import Terminal from "@/app/components/terminal"
 import { useCallback, useEffect, useState, useMemo } from "react"
 import useEventSource from "@/app/hooks/coder";
 import { boxExample, boxPropsData, exampleCodeMap } from "./data";
-import { IconCode } from "@tabler/icons-react";
+import { IconCode, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Separator } from "@/components/ui/separator"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 export default function BoxPage() {
   const fileName = "box.js";
@@ -57,8 +62,8 @@ export default function BoxPage() {
   }, [setCode])
 
   return (
-    <div className="flex flex-row gap-4 h-0 flex-1 overflow-hidden px-8">
-      <div className="flex-1 pr-4 overflow-hidden flex flex-col">
+    <div className="flex flex-row h-0 flex-1 overflow-hidden px-8">
+      <div className="flex-1 overflow-hidden flex flex-col">
         {/* 标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-3xl xl:text-4xl">Box</h1>
@@ -70,15 +75,15 @@ export default function BoxPage() {
         </div>
 
         {/* Props 文档 - 按分类显示 */}
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto pr-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Props</h2>
           
           {Object.entries(groupedProps).map(([category, props]) => (
             <div key={category} className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+              <div className="flex items-center mb-3">
                 <span className="w-1 h-6 bg-purple-500 mr-2 rounded"></span>
-                {category}
-              </h3>
+                <h3 className="text-lg font-semibold text-gray-800">{category}</h3>
+              </div>
               
               <div className="space-y-3">
                 {props.map(prop => {
@@ -86,65 +91,78 @@ export default function BoxPage() {
                   const hasExample = !!prop.example
                   
                   return (
-                    <div key={prop.name} className="border border-gray-200 rounded-lg overflow-hidden hover:border-purple-300 transition">
-                      <div 
-                        className="bg-gray-50 px-4 py-3 border-b border-gray-200 cursor-pointer"
-                        onClick={() => toggleProp(prop.name)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <code className="text-base font-semibold text-purple-700">{prop.name}</code>
-                            <div className="flex space-x-2">
-                              {prop.types.map(type => (
-                                <span key={type} className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">
-                                  {type}
-                                </span>
-                              ))}
-                            </div>
-                            {prop.default && (
-                              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">
-                                默认: {prop.default}
-                              </span>
-                            )}
-                          </div>
-                          <button className="text-sm text-gray-500 hover:text-gray-700">
-                            <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`}></i>
-                          </button>
-                        </div>
-                      </div>
-                      
-                      {isExpanded && (
-                        <div className="p-4 bg-white">
-                          <p className="text-gray-700 mb-3">{prop.description}</p>
-                          
-                          {prop.allowedValues && prop.allowedValues.length > 0 && (
-                            <div className="mb-3">
-                              <span className="text-sm font-medium text-gray-600">允许的值：</span>
-                              <div className="flex flex-wrap gap-2 mt-1">
-                                {prop.allowedValues.map(value => (
-                                  <code key={value} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                                    {value}
-                                  </code>
-                                ))}
+                    <Collapsible 
+                      key={prop.name}
+                      open={isExpanded}
+                      onOpenChange={() => toggleProp(prop.name)}
+                    >
+                      <Card className="overflow-hidden hover:border-purple-300 transition-colors">
+                        <CollapsibleTrigger className="w-full">
+                          <CardHeader className="bg-gray-50/50">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <code className="text-base font-semibold text-purple-700">{prop.name}</code>
+                                <div className="flex gap-1.5">
+                                  {prop.types.map(type => (
+                                    <Badge key={type} variant="outline">
+                                      {type}
+                                    </Badge>
+                                  ))}
+                                </div>
+                                {prop.default && (
+                                  <Badge variant="secondary">
+                                    默认: {prop.default}
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="text-gray-500">
+                                {isExpanded ? (
+                                  <IconChevronUp size={18} />
+                                ) : (
+                                  <IconChevronDown size={18} />
+                                )}
                               </div>
                             </div>
-                          )}
-                          
-                          {hasExample && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                viewExample(prop.example!)
-                              }}
-                              className="text-sm text-purple-600 hover:text-purple-900 font-medium flex items-center space-x-1 cursor-pointer mt-2"
-                            >
-                              <IconCode size={16} />
-                              <span>查看示例</span>
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                          </CardHeader>
+                        </CollapsibleTrigger>
+                        
+                        <CollapsibleContent>
+                          <CardContent>
+                            <p className="text-gray-700 mb-3">{prop.description}</p>
+                            {prop.allowedValues && prop.allowedValues.length > 0 && (
+                              <div className="mb-3">
+                                <span className="text-sm font-medium text-gray-600 mb-2 block">允许的值：</span>
+                                <div className="flex flex-wrap gap-2">
+                                  {prop.allowedValues.map(value => (
+                                    <Badge key={value} variant="outline" className="font-mono">
+                                      {value}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {hasExample && (
+                              <>
+                                <Separator className="my-3" />
+                                <Button 
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    viewExample(prop.example!)
+                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-purple-600 hover:text-purple-900"
+                                >
+                                  <IconCode size={16} />
+                                  <span>查看示例</span>
+                                </Button>
+                              </>
+                            )}
+                          </CardContent>
+                        </CollapsibleContent>
+                      </Card>
+                    </Collapsible>
                   )
                 })}
               </div>
@@ -198,12 +216,12 @@ export default function BoxPage() {
               </div>
               <span className="text-sm text-gray-400 ml-4">{fileName}</span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 px-4">
               {isRunning && (
-                <span className="px-2 py-1 bg-green-500 text-white text-xs rounded flex items-center space-x-1">
-                  <i className="fas fa-circle text-xs animate-pulse"></i>
+                <Badge variant="secondary" className="gap-1.5 bg-green-600 text-white">
+                  <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
                   <span>运行中</span>
-                </span>
+                </Badge>
               )}
             </div>
           </div>
