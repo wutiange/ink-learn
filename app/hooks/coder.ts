@@ -3,10 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import type { Terminal as XTermType } from '@xterm/xterm';
 
-const clientId = uuidv4();
 let es: EventSource | null = null;
 const allListeners: Record<string, ((data: string) => void)[]> = {}
-const initEventSource = () => {
+const initEventSource = (clientId: string) => {
   if (!es) {
     es = new EventSource(`/code-previewer?clientId=${clientId}`)
   }
@@ -43,10 +42,24 @@ const useCoder = (fileName: string, defCode: string) => {
   const [isRunning, setIsRunning] = useState(false);
   const [term, setTerm] = useState<XTermType | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
-
+  const [clientId] = useState<string>(() => {
+    // 检查是否在浏览器环境
+    if (typeof window === 'undefined') {
+      // 服务器端渲染时返回一个临时值
+      return '';
+    }
+    const tempClientId = localStorage.getItem('clientId');
+    if (tempClientId) {
+      return tempClientId;
+    }
+    const newClientId = uuidv4();
+    localStorage.setItem('clientId', newClientId);
+    return newClientId;
+  });
 
   useEffect(() => {
-    initEventSource()
+    if (!clientId) return;
+    initEventSource(clientId)
     return () => {
       fetch('/code-previewer', {
         method: 'DELETE',
@@ -56,7 +69,7 @@ const useCoder = (fileName: string, defCode: string) => {
         body: JSON.stringify({ clientId }),
       })
     }
-  }, [])
+  }, [clientId])
 
   useEffect(() => {
     if (!fileName) return
@@ -67,6 +80,7 @@ const useCoder = (fileName: string, defCode: string) => {
   }, [fileName, term])
 
   const send = useCallback(async (code: string) => {
+    if (!clientId) return;
     setIsRunning(true)
     term?.clear();
     const {cols = 80, rows = 40} = term ?? {};
@@ -78,7 +92,7 @@ const useCoder = (fileName: string, defCode: string) => {
       body: JSON.stringify({ code, cols, rows, clientId, fileName }),
     }).then(res => res.json())
     setIsRunning(false)
-  }, [fileName, term])
+  }, [fileName, term, clientId])
 
   const handleEditorChange = useCallback((value: string | undefined) => {
     if (timerRef.current) {
