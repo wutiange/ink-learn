@@ -17,7 +17,11 @@ const clients: Record<string, [ReadableStreamDefaultController, string | null, I
 
 async function delFile(tempDir: string) {
   // 删除指定文件夹下的全部文件，但是不删除文件夹本身
-  await rm(tempDir, { recursive: true, force: true })
+  try {
+    await rm(tempDir, { recursive: true, force: true })
+  } catch (error) {
+    console.warn('delete file error', error)
+  }
 }
 
 function killPty(clientId: string) {
@@ -89,7 +93,7 @@ export async function GET(request: NextRequest) {
 type PostRequest = { code: string, cols: number, rows: number, clientId: string, fileName: string }
 export async function POST(request: NextRequest) {
   try {
-    const { code, cols, rows, clientId, fileName } = (await request.json()) as PostRequest
+    const { code, cols, rows, clientId, fileName } = (await request.json()) as PostRequest;
     const tempDir = path.join(inkDemoDir, `.temp-${clientId}`)
     await mkdir(tempDir, { recursive: true })
     const newCode = /import\s+React/.test(code) ? code : `import React from 'react';\n${code}`;

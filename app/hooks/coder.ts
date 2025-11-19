@@ -60,27 +60,27 @@ const useCoder = (fileName: string, defCode: string) => {
   useEffect(() => {
     if (!clientId) return;
     initEventSource(clientId)
-    return () => {
-      fetch('/code-previewer', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ clientId }),
-      })
-    }
   }, [clientId])
 
   useEffect(() => {
     if (!fileName) return
     return addListener(fileName, (data: string) => {
-      console.log('------data-----', data)
       term?.write(data)
     })
   }, [fileName, term])
 
-  const send = useCallback(async (code: string) => {
+  const delTempFile = useCallback(async () => {
     if (!clientId) return;
+    await fetch('/code-previewer', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }, [clientId])
+
+  const send = useCallback(async (code: string) => {
+    if (!clientId || !term) return;
     setIsRunning(true)
     term?.clear();
     const {cols = 80, rows = 40} = term ?? {};
@@ -106,7 +106,7 @@ const useCoder = (fileName: string, defCode: string) => {
     }, 500);
   }, [send])
 
-  return { send, content, isRunning, setContent, setTerm, setCode: handleEditorChange, code }
+  return { send, content, isRunning, setContent, setTerm, setCode: handleEditorChange, code, delTempFile }
 }
 
 export default useCoder;

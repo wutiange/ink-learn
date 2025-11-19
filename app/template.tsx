@@ -4,11 +4,21 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from 
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect } from "react"
 import { Fragment } from "react/jsx-runtime"
+import useCoder from "./hooks/coder"
 
 function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const pathnameArr = pathname.split('/').slice(1)
+  const { delTempFile } = useCoder('', '')
+
+  useEffect(() => {
+    return () => {
+      delTempFile()
+    }
+  }, [delTempFile])
+  
   return (
     <div className="flex flex-col flex-1 h-lvh">
       <header className="flex items-center gap-2 p-4">
