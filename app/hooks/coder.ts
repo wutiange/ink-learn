@@ -76,13 +76,14 @@ const useCoder = (fileName: string, defCode: string) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ clientId }),
     })
   }, [clientId])
 
   const send = useCallback(async (code: string) => {
     if (!clientId || !term) return;
     setIsRunning(true)
-    term?.clear();
+    term?.reset();
     const {cols = 80, rows = 40} = term ?? {};
     await fetch('/code-previewer', {
       method: 'POST',

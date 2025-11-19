@@ -4,7 +4,7 @@ import { exampleCode } from './data'
 
 export default function HomePage() {
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 overflow-y-auto">
 
       {/* Hero 区域 */}
       <section className="pt-16 pb-20 px-4">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { Terminal as XTermType } from '@xterm/xterm';
 import type { FitAddon as FitAddonType } from '@xterm/addon-fit';
 import { cn } from '@/lib/utils';

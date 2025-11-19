@@ -4,7 +4,7 @@ import { Editor } from "@monaco-editor/react"
 import Terminal from "@/app/components/terminal"
 import { useCallback, useEffect, useMemo } from "react"
 import useEventSource from "@/app/hooks/coder";
-import { boxExample, boxPropsData, exampleCodeMap } from "./data";
+import { boxExample, boxPropsData } from "./data";
 import { IconCode } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -38,9 +38,8 @@ export default function BoxPage() {
     return groups
   }, [])
 
-  // 查看示例
-  const viewExample = useCallback((exampleKey: string) => {
-    const exampleCode = exampleCodeMap[exampleKey]
+  // 查看示例：直接使用示例代码字符串
+  const viewExample = useCallback((exampleCode: string) => {
     if (exampleCode) {
       setCode(exampleCode)
     }
@@ -191,15 +190,14 @@ export default function BoxPage() {
             <div className="flex items-center space-x-2 px-4">
               {isRunning && (
                 <Badge variant="secondary" className="gap-1.5 bg-green-600 text-white">
-                  <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
                   <span>运行中</span>
                 </Badge>
               )}
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1">
             <Terminal 
-              className="h-full w-full" 
+              className="h-full w-full overflow-y-auto" 
               onTermRef={setTerm} 
             />
           </div>

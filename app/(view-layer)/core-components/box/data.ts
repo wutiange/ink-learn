@@ -13,17 +13,17 @@ import {render, Box, Text} from 'ink';
 
 const Example = () => (
 	<>
-    <Box width={4} borderColor="blue" borderStyle="classic">
-      <Text>X</Text>
-    </Box>
+		<Box width={4}>
+			<Text>X</Text>
+		</Box>
 
-    <Box width={10} borderColor="blue" borderStyle="classic">
-      <Box width="50%">
-        <Text>X</Text>
-      </Box>
-      <Text>Y</Text>
-    </Box>
-  </>
+		<Box width={10}>
+			<Box width="50%">
+				<Text>X</Text>
+			</Box>
+			<Text>Y</Text>
+		</Box>
+	</>
 );
 render(<Example />);
 `.trim()
@@ -33,17 +33,17 @@ import {render, Box, Text} from 'ink';
 
 const Example = () => (
 	<>
-    <Box height={4} borderColor="blue" borderStyle="classic">
-      <Text>X</Text>
-    </Box>
+		<Box height={4}>
+			<Text>X</Text>
+		</Box>
 
-    <Box height={6} flexDirection="column" borderColor="blue" borderStyle="classic">
-      <Box height="50%">
-        <Text>X</Text>
-      </Box>
-      <Text>Y</Text>
-    </Box>
-  </>
+		<Box height={6} flexDirection="column">
+			<Box height="50%">
+				<Text>X</Text>
+			</Box>
+			<Text>Y</Text>
+		</Box>
+	</>
 );
 render(<Example />);
 `.trim()
@@ -53,14 +53,14 @@ import {render, Box, Text} from 'ink';
 
 const Example = () => (
 	<>
-    <Box paddingTop={2} borderColor="blue" borderStyle="classic"><Text>Top</Text></Box>
-    <Box paddingBottom={2} borderColor="blue" borderStyle="classic"><Text>Bottom</Text></Box>
-    <Box paddingLeft={2} borderColor="blue" borderStyle="classic"><Text>Left</Text></Box>
-    <Box paddingRight={2} borderColor="blue" borderStyle="classic"><Text>Right</Text></Box>
-    <Box paddingX={2} borderColor="blue" borderStyle="classic"><Text>Left and right</Text></Box>
-    <Box paddingY={2} borderColor="blue" borderStyle="classic"><Text>Top and bottom</Text></Box>
-    <Box padding={2} borderColor="blue" borderStyle="classic"><Text>Top, bottom, left and right</Text></Box>
-  </>
+		<Box paddingTop={2}><Text>Top</Text></Box>
+		<Box paddingBottom={2}><Text>Bottom</Text></Box>
+		<Box paddingLeft={2}><Text>Left</Text></Box>
+		<Box paddingRight={2}><Text>Right</Text></Box>
+		<Box paddingX={2}><Text>Left and right</Text></Box>
+		<Box paddingY={2}><Text>Top and bottom</Text></Box>
+		<Box padding={2}><Text>Top, bottom, left and right</Text></Box>
+	</>
 );
 render(<Example />);
 `.trim()
@@ -70,14 +70,14 @@ import {render, Box, Text} from 'ink';
 
 const Example = () => (
 	<>
-    <Box marginTop={2} borderColor="blue" borderStyle="classic"><Text>Top</Text></Box>
-    <Box marginBottom={2} borderColor="blue" borderStyle="classic"><Text>Bottom</Text></Box>
-    <Box marginLeft={2} borderColor="blue" borderStyle="classic"><Text>Left</Text></Box>
-    <Box marginRight={2} borderColor="blue" borderStyle="classic"><Text>Right</Text></Box>
-    <Box marginX={2} borderColor="blue" borderStyle="classic"><Text>Left and right</Text></Box>
-    <Box marginY={2} borderColor="blue" borderStyle="classic"><Text>Top and bottom</Text></Box>
-    <Box margin={2} borderColor="blue" borderStyle="classic"><Text>Top, bottom, left and right</Text></Box>
-  </>
+		<Box marginTop={2}><Text>Top</Text></Box>
+		<Box marginBottom={2}><Text>Bottom</Text></Box>
+		<Box marginLeft={2}><Text>Left</Text></Box>
+		<Box marginRight={2}><Text>Right</Text></Box>
+		<Box marginX={2}><Text>Left and right</Text></Box>
+		<Box marginY={2}><Text>Top and bottom</Text></Box>
+		<Box margin={2}><Text>Top, bottom, left and right</Text></Box>
+	</>
 );
 render(<Example />);
 `
@@ -531,6 +531,7 @@ export interface BoxPropData {
   default?: string;
   description: string;
   allowedValues?: string[];
+  // 直接存放示例代码字符串，而不是示例 key
   example?: string;
   category: string;
 }
@@ -542,14 +543,14 @@ export const boxPropsData: BoxPropData[] = [
     name: 'width',
     types: ['number', 'string'],
     description: '设置元素的宽度（以空格为单位）。也可以设置为百分比，会基于父元素的宽度计算。',
-    example: 'boxWidthExample',
+    example: boxWidthExample,
     category: '尺寸 (Dimensions)'
   },
   {
     name: 'height',
     types: ['number', 'string'],
     description: '设置元素的高度（以行为单位）。也可以设置为百分比，会基于父元素的高度计算。',
-    example: 'boxheightExample',
+    example: boxheightExample,
     category: '尺寸 (Dimensions)'
   },
   {
@@ -571,7 +572,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '顶部内边距。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -579,7 +579,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '底部内边距。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -587,7 +586,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '左侧内边距。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -595,7 +593,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '右侧内边距。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -603,7 +600,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '水平内边距。等同于同时设置 paddingLeft 和 paddingRight。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -611,7 +607,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '垂直内边距。等同于同时设置 paddingTop 和 paddingBottom。',
-    example: 'boxPaddingExample',
     category: '内边距 (Padding)'
   },
   {
@@ -619,7 +614,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '四周内边距。等同于同时设置 paddingTop、paddingBottom、paddingLeft 和 paddingRight。',
-    example: 'boxPaddingExample',
+    example: boxPaddingExample,
     category: '内边距 (Padding)'
   },
   
@@ -629,7 +624,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '顶部外边距。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -637,7 +631,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '底部外边距。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -645,7 +638,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '左侧外边距。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -653,7 +645,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '右侧外边距。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -661,7 +652,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '水平外边距。等同于同时设置 marginLeft 和 marginRight。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -669,7 +659,6 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '垂直外边距。等同于同时设置 marginTop 和 marginBottom。',
-    example: 'boxMarginExample',
     category: '外边距 (Margin)'
   },
   {
@@ -677,7 +666,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '四周外边距。等同于同时设置 marginTop、marginBottom、marginLeft 和 marginRight。',
-    example: 'boxMarginExample',
+    example: boxMarginExample,
     category: '外边距 (Margin)'
   },
   
@@ -687,7 +676,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '元素的列和行之间的间距大小。是 columnGap 和 rowGap 的简写。',
-    example: 'boxGapExample',
+    example: boxGapExample,
     category: '间距 (Gap)'
   },
   {
@@ -695,7 +684,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '元素的列之间的间距大小。',
-    example: 'boxColumnGapExample',
+    example: boxColumnGapExample,
     category: '间距 (Gap)'
   },
   {
@@ -703,7 +692,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '元素的行之间的间距大小。',
-    example: 'boxRowGapExample',
+    example: boxRowGapExample,
     category: '间距 (Gap)'
   },
   
@@ -713,7 +702,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '0',
     description: '定义元素的放大比例。如果所有元素的 flexGrow 都为 1，则它们将等分剩余空间。',
-    example: 'boxFlexGrowExample',
+    example: boxFlexGrowExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -721,14 +710,14 @@ export const boxPropsData: BoxPropData[] = [
     types: ['number'],
     default: '1',
     description: '定义元素的缩小比例。如果空间不足，元素将根据 flexShrink 的值进行缩小。',
-    example: 'boxFlexShrinkExample',
+    example: boxFlexShrinkExample,
     category: '弹性布局 (Flex)'
   },
   {
     name: 'flexBasis',
     types: ['number', 'string'],
     description: '定义在分配剩余空间之前元素的默认大小。可以是数字或百分比。',
-    example: 'boxFlexBasisExample',
+    example: boxFlexBasisExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -736,7 +725,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['string'],
     allowedValues: ['row', 'row-reverse', 'column', 'column-reverse'],
     description: '定义主轴的方向，决定子元素的排列方向。',
-    example: 'boxFlexDirectionExample',
+    example: boxFlexDirectionExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -744,7 +733,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['string'],
     allowedValues: ['nowrap', 'wrap', 'wrap-reverse'],
     description: '定义如果一行放不下所有元素时，是否换行以及如何换行。',
-    example: 'boxFlexWrapExample',
+    example: boxFlexWrapExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -752,7 +741,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['string'],
     allowedValues: ['flex-start', 'center', 'flex-end'],
     description: '定义子元素在交叉轴（垂直于主轴）上的对齐方式。',
-    example: 'boxAlignItemsExample',
+    example: boxAlignItemsExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -761,7 +750,7 @@ export const boxPropsData: BoxPropData[] = [
     default: 'auto',
     allowedValues: ['auto', 'flex-start', 'center', 'flex-end'],
     description: '允许单个元素有与其他元素不同的交叉轴对齐方式，覆盖 alignItems 的值。',
-    example: 'boxAlignSelfExample',
+    example: boxAlignSelfExample,
     category: '弹性布局 (Flex)'
   },
   {
@@ -769,7 +758,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['string'],
     allowedValues: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'],
     description: '定义子元素在主轴上的对齐方式。',
-    example: 'boxJustifyContentExample',
+    example: boxJustifyContentExample,
     category: '弹性布局 (Flex)'
   },
   
@@ -780,7 +769,7 @@ export const boxPropsData: BoxPropData[] = [
     default: 'flex',
     allowedValues: ['flex', 'none'],
     description: '设置为 none 可以隐藏元素。',
-    example: 'boxDisplayExample',
+    example: boxDisplayExample,
     category: '可见性 (Visibility)'
   },
   {
@@ -789,7 +778,6 @@ export const boxPropsData: BoxPropData[] = [
     default: 'visible',
     allowedValues: ['visible', 'hidden'],
     description: '元素在水平方向上的溢出行为。',
-    example: 'boxOverflowExample',
     category: '可见性 (Visibility)'
   },
   {
@@ -798,7 +786,6 @@ export const boxPropsData: BoxPropData[] = [
     default: 'visible',
     allowedValues: ['visible', 'hidden'],
     description: '元素在垂直方向上的溢出行为。',
-    example: 'boxOverflowExample',
     category: '可见性 (Visibility)'
   },
   {
@@ -807,7 +794,7 @@ export const boxPropsData: BoxPropData[] = [
     default: 'visible',
     allowedValues: ['visible', 'hidden'],
     description: '同时设置 overflowX 和 overflowY 的简写。',
-    example: 'boxOverflowExample',
+    example: boxOverflowExample,
     category: '可见性 (Visibility)'
   },
   
@@ -817,42 +804,42 @@ export const boxPropsData: BoxPropData[] = [
     types: ['string', 'BoxStyle'],
     allowedValues: ['single', 'double', 'round', 'bold', 'singleDouble', 'doubleSingle', 'classic'],
     description: '添加指定样式的边框。如果未定义（默认），则不会添加边框。也可以传入自定义边框对象。',
-    example: 'boxBorderStyleExample',
+    example: boxBorderStyleExample,
     category: '边框 (Borders)'
   },
   {
     name: 'borderColor',
     types: ['string'],
     description: '更改边框颜色。是同时设置 borderTopColor、borderRightColor、borderBottomColor 和 borderLeftColor 的简写。',
-    example: 'boxBorderColorExample',
+    example: boxBorderColorExample,
     category: '边框 (Borders)'
   },
   {
     name: 'borderTopColor',
     types: ['string'],
     description: '更改顶部边框颜色。接受与 <Text> 组件中 color 相同的值。',
-    example: 'boxBorderColorExample',
+    example: boxBorderColorExample,
     category: '边框 (Borders)'
   },
   {
     name: 'borderRightColor',
     types: ['string'],
     description: '更改右侧边框颜色。接受与 <Text> 组件中 color 相同的值。',
-    example: 'boxBorderColorExample',
+    example: boxBorderColorExample,
     category: '边框 (Borders)'
   },
   {
     name: 'borderBottomColor',
     types: ['string'],
     description: '更改底部边框颜色。接受与 <Text> 组件中 color 相同的值。',
-    example: 'boxBorderColorExample',
+    example: boxBorderColorExample,
     category: '边框 (Borders)'
   },
   {
     name: 'borderLeftColor',
     types: ['string'],
     description: '更改左侧边框颜色。接受与 <Text> 组件中 color 相同的值。',
-    example: 'boxBorderColorExample',
+    example: boxBorderColorExample,
     category: '边框 (Borders)'
   },
   {
@@ -860,7 +847,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['boolean'],
     default: 'false',
     description: '使边框颜色变暗。是同时设置 borderTopDimColor、borderBottomDimColor、borderLeftDimColor 和 borderRightDimColor 的简写。',
-    example: 'boxBorderDimExample',
+    example: boxBorderDimExample,
     category: '边框 (Borders)'
   },
   {
@@ -868,7 +855,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['boolean'],
     default: 'false',
     description: '使顶部边框颜色变暗。',
-    example: 'boxBorderDimExample',
+    example: boxBorderDimExample,
     category: '边框 (Borders)'
   },
   {
@@ -876,7 +863,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['boolean'],
     default: 'false',
     description: '使底部边框颜色变暗。',
-    example: 'boxBorderDimExample',
+    example: boxBorderDimExample,
     category: '边框 (Borders)'
   },
   {
@@ -884,7 +871,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['boolean'],
     default: 'false',
     description: '使左侧边框颜色变暗。',
-    example: 'boxBorderDimExample',
+    example: boxBorderDimExample,
     category: '边框 (Borders)'
   },
   {
@@ -892,7 +879,7 @@ export const boxPropsData: BoxPropData[] = [
     types: ['boolean'],
     default: 'false',
     description: '使右侧边框颜色变暗。',
-    example: 'boxBorderDimExample',
+    example: boxBorderDimExample,
     category: '边框 (Borders)'
   },
   {
@@ -929,33 +916,7 @@ export const boxPropsData: BoxPropData[] = [
     name: 'backgroundColor',
     types: ['string'],
     description: '元素的背景色。接受与 <Text> 组件中 color 相同的值。背景色会填充整个 <Box> 区域，并被子 <Text> 组件继承，除非它们指定自己的 backgroundColor。',
-    example: 'boxBackgroundColorExample',
+    example: boxBackgroundColorExample,
     category: '背景 (Background)'
   }
 ]
-
-// 导出示例代码映射
-export const exampleCodeMap: Record<string, string> = {
-  boxExample,
-  boxWidthExample,
-  boxheightExample,
-  boxPaddingExample,
-  boxMarginExample,
-  boxGapExample,
-  boxColumnGapExample,
-  boxRowGapExample,
-  boxFlexGrowExample,
-  boxFlexShrinkExample,
-  boxFlexBasisExample,
-  boxFlexDirectionExample,
-  boxFlexWrapExample,
-  boxAlignItemsExample,
-  boxAlignSelfExample,
-  boxJustifyContentExample,
-  boxBorderStyleExample,
-  boxBorderColorExample,
-  boxBorderDimExample,
-  boxBackgroundColorExample,
-  boxDisplayExample,
-  boxOverflowExample
-}
