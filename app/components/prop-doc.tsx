@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import CodePreviewer from "../(main)/(view-layer)/components/code-previewer"
+import CodePreviewer from "../(view-layer)/components/code-previewer"
 
 export type PropDocProps = {
   name: string

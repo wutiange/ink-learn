@@ -1,7 +1,7 @@
 'use client'
 
 import { Editor } from "@monaco-editor/react"
-import Terminal from "../../../components/terminal"
+import Terminal from "../../components/terminal"
 import { cn } from "@/lib/utils"
 import { useCallback, useEffect, useRef, useState } from "react"
 
