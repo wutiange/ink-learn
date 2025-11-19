@@ -9,14 +9,14 @@ type ResourceCardProps = {
 }
 function ResourceCard({ items }: ResourceCardProps) {
   return (
-    <>
+    <div className="flex flex-row flex-wrap gap-4 ml-4">
       {items.map((item) => (
-        <Link key={item.title} className="not-prose bg-gray-0 shadow-xl group block space-y-2 rounded-md p-6 pt-5 transition-shadow duration-300 hover:shadow-xs" href={item.path}>
+        <Link key={item.title} className="not-prose bg-gray-0 shadow-xl group block space-y-2 rounded-md p-6 pt-5 transition-shadow duration-300 hover:shadow-xs w-100" href={item.path}>
           <h3 className="group-hover:text-gray-1000 truncate text-lg font-medium leading-snug">{item.title}</h3>
           <div className="line-clamp-3 text-sm font-normal text-gray-900">{item.description}</div>
         </Link>
       ))}
-    </>
+    </div>
   )
 }
 
