@@ -69,6 +69,28 @@ const useCoder = (fileName: string, defCode: string) => {
     })
   }, [fileName, term])
 
+  useEffect(() => {
+    if (!clientId || !term) return
+
+    const disposable = term.onData(async (data) => {
+      try {
+        await fetch('/code-previewer', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ clientId, data }),
+        })
+      } catch (error) {
+        console.error('send input error', error)
+      }
+    })
+
+    return () => {
+      disposable.dispose()
+    }
+  }, [clientId, term])
+
   const delTempFile = useCallback(async () => {
     if (!clientId) return;
     await fetch('/code-previewer', {

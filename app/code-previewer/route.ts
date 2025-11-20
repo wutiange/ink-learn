@@ -135,3 +135,30 @@ export async function DELETE(request: NextRequest) {
   killPty(clientId)
   return NextResponse.json({ content: 'ok' })
 }
+
+type PutRequest = { clientId: string; data: string }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { clientId, data } = (await request.json()) as PutRequest
+    const client = clients[clientId]
+
+    if (!client) {
+      return NextResponse.json({ error: 'Client not found' }, { status: 400 })
+    }
+
+    const pty = client[2]
+
+    if (!pty) {
+      return NextResponse.json({ error: 'PTY not initialized' }, { status: 400 })
+    }
+
+    pty.write(data)
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    console.error('code-previewer PUT error', error)
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
