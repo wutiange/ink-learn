@@ -1,38 +1,32 @@
 export const coreComponents = [
   {
     title: "Text",
-    description: "This component can display text and change its style to make it bold, underlined, italic, or strikethrough.",
+    description: "显示文本并支持修改样式，如粗体、下划线、斜体或颜色。",
     path: "/core-components/text",
   },
   {
     title: "Box",
-    description: "<Box> is an essential Ink component to build your layout. It's like <div style=\"display: flex\"> in the browser.",
+    description: "<Box> 是构建布局的基础组件。类似于浏览器中的 <div style=\"display: flex\">。",
     path: "/core-components/box",
   },
   {
     title: "Newline",
-    description: "Adds one or more newline (\n) characters. Must be used within <Text> components.",
+    description: "添加一个或多个换行符 (\\n)。必须在 <Text> 组件内使用。",
     path: "/core-components/newline",
   },
   {
     title: "Spacer",
-    description: "A flexible space that expands along the major axis of its containing layout. It's useful as a shortcut for filling all the available space between elements.\
-\
-For example, using <Spacer> in a <Box> with default flex direction (row) will position \"Left\" on the left side and will push \"Right\" to the right side.",
+    description: "一个灵活的空白空间，会沿主轴方向扩展以填满剩余空间。常用于在元素之间自动拉开距离。",
     path: "/core-components/spacer",
   },
   {
     title: "Static",
-    description: "<Static> component permanently renders its output above everything else. It's useful for displaying activity like completed tasks or logs - things that don't change after they're rendered (hence the name \"Static\").\
-\
-It's preferred to use <Static> for use cases like these when you can't know or control the number of items that need to be rendered.\
-\
-For example, Tap uses <Static> to display a list of completed tests. Gatsby uses it to display a list of generated pages while still displaying a live progress bar.",
+    description: "<Static> 组件将其输出永久渲染在所有内容之上。非常适合显示如“已完成任务列表”或“日志”等渲染后不会改变的内容。",
     path: "/core-components/static",
   },
   {
     title: "Transform",
-    description: "Transform a string representation of React components before they're written to output. For example, you might want to apply a gradient to text, add a clickable link, or create some text effects. These use cases can't accept React nodes as input; they expect a string. That's what the <Transform> component does: it gives you an output string of its child components and lets you transform it in any way.",
+    description: "在 React 组件输出写入之前转换其字符串表示。例如，用于实现渐变文本、添加链接或文本特效。",
     path: "/core-components/transform",
   },
 ]

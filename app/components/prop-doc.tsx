@@ -26,9 +26,11 @@ type PropDocProps = {
   code: string;
   propsData: PropData[];
   description: string | React.ReactNode;
+  // 可选：左侧属性/参数区域标题，默认为 "Props"
+  sectionTitle?: string;
 }
 
-export default function PropDoc({ propTitle, fileName, code: defCode, propsData, description }: PropDocProps) {
+export default function PropDoc({ propTitle, fileName, code: defCode, propsData, description, sectionTitle = "Props" }: PropDocProps) {
   const { isRunning, setTerm, setCode, code, send } = useEventSource(fileName, defCode)
 
   useEffect(() => {
@@ -67,14 +69,14 @@ export default function PropDoc({ propTitle, fileName, code: defCode, propsData,
         {/* 标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-3xl xl:text-4xl">{propTitle}</h1>
-          <p className="text-xl text-gray-600 mt-4 leading-relaxed">
+          <div className="text-xl text-gray-600 mt-4 leading-relaxed space-y-3">
             {description}
-          </p>
+          </div>
         </div>
 
         {/* Props 文档 - 按分类显示 */}
         {propsData.length > 0 && <div className="overflow-y-auto pr-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Props</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{sectionTitle}</h2>
           
           {Object.entries(groupedProps).map(([category, props]) => (
             <div key={category} className="mb-6">

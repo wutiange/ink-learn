@@ -1,38 +1,37 @@
-
 export const hooks = [
   {
     title: 'useInput',
-    description: "This hook is used for handling user input. It's a more convenient alternative to using useStdin and listening for data events. The callback you pass to useInput is called for each character when the user enters any input. However, if the user pastes text and it's more than one character, the callback will be called only once, and the whole string will be passed as input. You can find a full example of using useInput at examples/use-input.",
+    description: "用于处理用户输入。比直接使用 useStdin 和监听 data 事件更方便。每当用户输入时，useInput 的回调都会被调用。",
     path: '/hooks/useinput',
   },
   {
     title: 'useApp',
-    description: 'useApp is a React hook that exposes a method to manually exit the app (unmount).',
+    description: '暴露一个 exit 方法，用于手动退出（卸载）应用。',
     path: '/hooks/useapp',
   },
   {
     title: 'useStdin',
-    description: 'useStdin is a React hook that exposes the stdin stream.',
+    description: '暴露 stdin 流。',
     path: '/hooks/usestdin',
   },
   {
     title: 'useStdout',
-    description: 'useStdout is a React hook that exposes the stdout stream where Ink renders your app.',
+    description: '暴露 stdout 流（Ink 渲染输出的地方）。',
     path: '/hooks/usestdout',
   },
   {
     title: 'useStderr',
-    description: 'useStderr is a React hook that exposes the stderr stream.',
+    description: '暴露 stderr 流。',
     path: '/hooks/usestderr',
   },
   {
     title: 'useFocus',
-    description: 'A component that uses the useFocus hook becomes "focusable" to Ink, so when the user presses Tab, Ink will switch focus to this component. If there are multiple components that execute the useFocus hook, focus will be given to them in the order in which these components are rendered. This hook returns an object with an isFocused boolean property, which determines whether this component is focused.',
+    description: '使组件变得“可聚焦”。当用户按 Tab 时，Ink 会切换焦点到此组件。返回 isFocused 状态。',
     path: '/hooks/usefocus',
   },
   {
     title: 'useFocusManager',
-    description: 'This hook exposes methods to enable or disable focus management for all components or manually switch focus to next or previous components.',
+    description: '暴露用于启用/禁用焦点管理或手动切换焦点的方法。',
     path: '/hooks/usefocusmanager',
   },
 ]
