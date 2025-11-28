@@ -39,7 +39,7 @@ export function AppSidebar() {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/">
-                <Image src={ink} alt="Logo" width={50} height={50} />
+                <Image src={ink} alt="Logo" width={50} className="h-auto" loading="eager" />
                 <span className="text-base font-semibold">Ink learn</span>
               </Link>
             </SidebarMenuButton>
