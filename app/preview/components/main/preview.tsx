@@ -8,6 +8,7 @@ import { IconArrowLeft, IconPlayerPlay } from "@tabler/icons-react"
 import useEventSource from "../../../hooks/coder"
 
 function Preview() {
+
   const searchParams = useSearchParams()
   const router = useRouter()
   const initialCode = searchParams.get('code') ? decodeURIComponent(searchParams.get('code')!) : ''
