@@ -14,6 +14,7 @@ const Terminal = ({ className, onTermRef }: TerminalProps) => {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const termRef = useRef<XTermType | null>(null);
   const fitAddonRef = useRef<FitAddonType | null>(null);
+  const isUnmountedRef = useRef(false);
 
   const handleResize = useCallback(() => {
     if (fitAddonRef.current) {
@@ -50,8 +51,17 @@ const Terminal = ({ className, onTermRef }: TerminalProps) => {
       fitAddonRef.current.fit();
       onTermRef?.(termRef.current);
     }
+    if (termRef.current || isUnmountedRef.current) {
+      return
+    }
     init();
   }, [onTermRef])
+
+  useEffect(() => {
+    return () => {
+      isUnmountedRef.current = true;
+    }
+  },[])
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);

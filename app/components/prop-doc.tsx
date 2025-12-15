@@ -2,7 +2,7 @@
 
 import { Editor } from "@monaco-editor/react"
 import Terminal from "@/app/components/terminal"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import useEventSource from "@/app/hooks/coder";
 import { IconCode } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button"
@@ -31,12 +31,7 @@ type PropDocProps = {
 }
 
 export default function PropDoc({ propTitle, fileName, code: defCode, propsData, description, sectionTitle = "Props" }: PropDocProps) {
-  const { isRunning, setTerm, setCode, code, send } = useEventSource(fileName, defCode)
-
-  useEffect(() => {
-    if (!defCode) return;
-    send(defCode);
-  }, [send, defCode])
+  const { isRunning, setTerm, setCode, code } = useEventSource(fileName, defCode)
 
   const handleEditorChange = useCallback((value: string | undefined) => {
     if (value) {

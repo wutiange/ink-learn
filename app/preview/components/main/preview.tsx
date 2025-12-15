@@ -2,7 +2,7 @@
 
 import { Editor } from "@monaco-editor/react"
 import Terminal from "@/app/components/terminal"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { IconArrowLeft, IconPlayerPlay } from "@tabler/icons-react"
 import useEventSource from "../../../hooks/coder"
@@ -13,12 +13,7 @@ function Preview() {
   const router = useRouter()
   const initialCode = searchParams.get('code') ? decodeURIComponent(searchParams.get('code')!) : ''
   const filename = searchParams.get('filename') || 'example.js'
-  const { isRunning, setTerm, setCode, send } = useEventSource(filename, initialCode)
-
-  useEffect(() => {
-    if (!initialCode) return;
-    send(initialCode);
-  }, [initialCode, send])
+  const { isRunning, setTerm, setCode } = useEventSource(filename, initialCode)
 
   const handleEditorChange = useCallback((value: string | undefined) => {
     if (value) {

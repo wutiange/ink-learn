@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import type { Terminal as XTermType } from '@xterm/xterm';
+import type { IDisposable, Terminal as XTermType } from '@xterm/xterm';
 
 // WebSocket 连接配置 - 替换为你的 WebSocket 服务器地址
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'wss://allunited.fun/ink-learn-websocket';
@@ -10,34 +10,47 @@ let ws: WebSocket | null = null;
 let wsStatus: 'ready' | 'close' | null = null;
 const allListeners: Record<string, ((data: string) => void)[]> = {}
 
-const initWebSocket = (
+const initWebSocket = async (
   clientId: string, 
-  onStateChange: (state: 'ready' | 'close') => void,
   onProcessStateChange?: (running: boolean) => void
 ) => {
   if (ws && [WebSocket.OPEN, WebSocket.CONNECTING].includes(ws.readyState as 0 | 1)) {
     return;
   }
 
-  ws = new WebSocket(WS_URL);
-
-  ws.onopen = () => {
-    // 发送初始化消息
-    ws?.send(JSON.stringify({
-      type: 'init',
-      data: { clientId }
-    }));
-  };
-
-  ws.onmessage = (event: MessageEvent) => {
-    try {
+  ws = await new Promise((resolve, reject) => {
+    const tempWs = new WebSocket(WS_URL);
+    tempWs.onopen = () => {
+      // 发送初始化消息
+      tempWs.send(JSON.stringify({
+        type: 'init',
+        data: { clientId }
+      }));
+    };
+    tempWs.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data);
       switch (message.type) {
         case 'ready':
           wsStatus = 'ready';
-          onStateChange?.('ready');
+          resolve(tempWs);
           break;
+      }
+    };
+    tempWs.onerror = (event: Event) => {
+      reject(event);
+    };
+    tempWs.onclose = () => {
+      reject(new Error('WebSocket closed'));
+    };
+  })
 
+  if (!ws) {
+    throw new Error('WebSocket not initialized');
+  }
+  ws.onmessage = (event: MessageEvent) => {
+    try {
+      const message = JSON.parse(event.data);
+      switch (message.type) {
         case 'output':
           // 触发所有监听器
           for (const fileName in allListeners) {
@@ -75,7 +88,6 @@ const initWebSocket = (
   };
 
   ws.onclose = () => {
-    onStateChange?.('close');
     wsStatus = 'close';
     onProcessStateChange?.(false);
     ws = null;
@@ -97,9 +109,9 @@ const useCoder = (fileName: string, defCode: string) => {
   const [code, setCodeState] = useState<string>(defCode);
   const [content, setContent] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [term, setTerm] = useState<XTermType | null>(null)
+  const termRef = useRef<XTermType | null>(null)
+  const disposableRef = useRef<IDisposable | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
-  const [wsStatusHook, setWsStatusHook] = useState<'ready' | 'close' | null>(null);
   const [processRunning, setProcessRunning] = useState(false); // 记录进程是否在运行（用于交互式输入）
   const [clientId] = useState<string>(() => {
     if (typeof window === 'undefined') {
@@ -114,38 +126,42 @@ const useCoder = (fileName: string, defCode: string) => {
     return newClientId;
   });
 
-  useEffect(() => {
-    setWsStatusHook(wsStatus);
+  const initHooksWebSocket = useCallback(async () => {
     if (!clientId) return;
-    initWebSocket(
+    await initWebSocket(
       clientId, 
-      (status) => {
-        setWsStatusHook(status);
-      },
       (running) => {
         setProcessRunning(running);
       }
     );
+  }, [clientId])
 
+  useEffect(() => {
     // 清理函数
     return () => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: 'cleanup' }));
       }
+      if (disposableRef.current) {
+        disposableRef.current.dispose();
+      }
     };
-  }, [clientId])
+  }, [])
 
   const setCode = useCallback((val: string) => {
     setCodeState(val);
   }, []);
 
   const send = useCallback(async (code: string) => {
-    if (!clientId || !term || !ws || wsStatusHook !== 'ready') return;
+    if (!ws) {
+      await initHooksWebSocket();
+    }
+    if (!clientId || !termRef.current || !ws || wsStatus !== 'ready') return;
 
     setIsRunning(true);
     setProcessRunning(true);
-    term?.reset();
-    const { cols = 80, rows = 40 } = term ?? {};
+    termRef.current?.reset();
+    const { cols = 80, rows = 40 } = termRef.current ?? {};
 
     try {
       ws.send(JSON.stringify({
@@ -163,37 +179,15 @@ const useCoder = (fileName: string, defCode: string) => {
     } finally {
       setIsRunning(false);
     }
-  }, [clientId, term, wsStatusHook, fileName])
+  }, [clientId, initHooksWebSocket, fileName])
 
   const handleData = useCallback((data: string) => {
-    term?.write(data);
-  }, [term])
+    termRef.current?.write(data);
+  }, [])
 
   useEffect(() => {
     return fileName ? addListener(fileName, handleData) : () => { };
-  }, [fileName, term, setCode, handleData])
-
-  useEffect(() => {
-    if (!clientId || !term || !ws) return;
-
-    const disposable = term.onData((data) => {
-      try {
-        // 只有在进程运行时才发送输入（用于交互式脚本）
-        if (ws && ws.readyState === WebSocket.OPEN && processRunning) {
-          ws.send(JSON.stringify({
-            type: 'input',
-            data
-          }));
-        }
-      } catch (error) {
-        console.error('send input error', error);
-      }
-    });
-
-    return () => {
-      disposable.dispose();
-    };
-  }, [clientId, term, processRunning])
+  }, [fileName, setCode, handleData])
 
   const delTempFile = useCallback(async () => {
     if (!clientId || !ws) return;
@@ -220,6 +214,25 @@ const useCoder = (fileName: string, defCode: string) => {
       }
     }, 500);
   }, [send, setCode])
+
+  const setTerm = useCallback((term: XTermType | null) => {
+    if (!term) return;
+    termRef.current = term;
+    send(code)
+    disposableRef.current = term.onData((data) => {
+      try {
+        // 只有在进程运行时才发送输入（用于交互式脚本）
+        if (ws && ws.readyState === WebSocket.OPEN && processRunning) {
+          ws.send(JSON.stringify({
+            type: 'input',
+            data
+          }));
+        }
+      } catch (error) {
+        console.error('send input error', error);
+      }
+    });
+  }, [code, processRunning, send])
 
   return { send, content, isRunning, setContent, setTerm, setCode: handleEditorChange, code, delTempFile }
 }
